@@ -152,7 +152,8 @@ def decompose_recursive(idx, matrix_a: np.ndarray, permutations, matrix_l: np.nd
             matrix_a_new = matrix_a[diag_size:, diag_size:] - np.dot(matrix_c, matrix_c.T) / diag_det
         else:  # diag_size == 2
             matrix_l[idx + diag_size:, idx:idx + diag_size] = np.dot(matrix_c, diag_matrix) / diag_det
-            matrix_a_new = matrix_a[diag_size:, diag_size:] - np.dot(np.dot(matrix_c, diag_matrix), matrix_c.T) / diag_det
+            matrix_a_new = matrix_a[diag_size:, diag_size:] - \
+                           np.dot(np.dot(matrix_c, diag_matrix), matrix_c.T) / diag_det
 
         return decompose_recursive(idx + diag_size, matrix_a_new, permutations, matrix_l, matrix_d)
 
@@ -169,6 +170,7 @@ def decompose(matrix_a: np.ndarray):
 
     # A is a (n x n)-matrix
     n = matrix_a[0, ].size
+    assert n == matrix_a[:, 0].size
 
     # Copy A because it will be changed in-place
     matrix_a_copy = np.copy(matrix_a)
