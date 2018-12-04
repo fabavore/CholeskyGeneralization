@@ -133,12 +133,12 @@ def decompose_recursive(idx, matrix_a: np.ndarray, permutations, matrix_l: np.nd
 
         # Calculate the inverse of the diagonal block for further calculations.
         if diag_size == 1:
-            d_inv = np.array([[1 / matrix_a[0, 0]]])
-
+            diag_det = matrix_a[0, 0]
         else:  # diag_size == 2
             # Calculate the inverse.
             a, b, d = matrix_a[0, 0], matrix_a[0, 1], matrix_a[1, 1]
-            d_inv = np.array([[a, -b], [-b, d]]) / (a * d - b * b)
+            diag_det = a * d - b * b
+            diag_matrix = np.array([[d, -b], [-b, a]])
 
         # Write the diagonal block into the block diagonal matrix.
         matrix_d[idx:idx + diag_size, idx:idx + diag_size] = matrix_a[0:diag_size, 0:diag_size]
@@ -146,13 +146,15 @@ def decompose_recursive(idx, matrix_a: np.ndarray, permutations, matrix_l: np.nd
         # Select C for calulation of the next A and L column
         matrix_c = matrix_a[diag_size:, 0:diag_size]
 
-        matrix_l[idx + diag_size:, idx:idx + diag_size] = np.dot(matrix_c, d_inv)
+        # Calculate matrix_l column and matrix_a_new for the next recursion step
+        if diag_size == 1:
+            matrix_l[idx + diag_size:, idx:idx + diag_size] = matrix_c / diag_det
+            matrix_a_new = matrix_a[diag_size:, diag_size:] - np.dot(matrix_c, matrix_c.T) / diag_det
+        else:  # diag_size == 2
+            matrix_l[idx + diag_size:, idx:idx + diag_size] = np.dot(matrix_c, diag_matrix) / diag_det
+            matrix_a_new = matrix_a[diag_size:, diag_size:] - np.dot(np.dot(matrix_c, diag_matrix), matrix_c.T) / diag_det
 
-        matrix_a_new = matrix_a[diag_size:, diag_size:] - np.dot(np.dot(matrix_c, d_inv), matrix_c.T)
-
-        return decompose_recursive(idx + diag_size,
-                                   matrix_a_new,
-                                   permutations, matrix_l, matrix_d)
+        return decompose_recursive(idx + diag_size, matrix_a_new, permutations, matrix_l, matrix_d)
 
 
 def decompose(matrix_a: np.ndarray):

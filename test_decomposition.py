@@ -38,8 +38,8 @@ def test_decompose(matrix_a):
     elif np.allclose(matrix_a, probe, ):
         print("Close enough.\n")
         if not (probe == probe.T).all():
-            print("A:\n", matrix_a,
-                "\nProbe A:\n", probe)
+            0#print("A:\n", matrix_a,
+             #   "\nProbe A:\n", probe)
                 # "\nGleich?:\n", A == probe, "\n")
     else:
         print("\n --- W R O N G !!! ---\n")
@@ -78,6 +78,5 @@ A_5 = np.array([[4, 0, 5, 1],
 
 
 if __name__ == '__main__':
-    #for _ in range(5):
-     #   random_test_decompose(4)
-     test_decompose(A_5)
+    for _ in range(20):
+        random_test_decompose(4)
