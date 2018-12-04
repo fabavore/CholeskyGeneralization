@@ -4,22 +4,22 @@ eps = np.finfo(float).eps
 epsilon = 0.5
 
 
-def get_diagonal_index_list(A: np.ndarray):
+def get_diagonal_indices(matrix_a: np.ndarray):
     """
     Get the position of the biggest diagonal or biggest non-diagonal item
     (according to given rule set) as a list containing 1 or 2 indices.
 
-    :param A: matrix A
+    :param matrix_a: matrix A
     :return: index list, None if A is singular
     """
 
     # A is a (n x n)-matrix
-    n = A[0, ].size
+    n = matrix_a[0, ].size
 
     xi_diag = 0
     k = -1
     for i in range(n):
-        val = abs(A[i, i])
+        val = abs(matrix_a[i, i])
         if val > xi_diag:
             xi_diag = val
             k = i
@@ -28,7 +28,7 @@ def get_diagonal_index_list(A: np.ndarray):
     l, m = -1, -1
     for i in range(1, n):
         for j in range(i):
-            val = abs(A[i, j])
+            val = abs(matrix_a[i, j])
             if val > xi_off:
                 xi_off = val
                 l, m = i, j
@@ -38,30 +38,45 @@ def get_diagonal_index_list(A: np.ndarray):
     elif xi_diag != 0 and xi_off / xi_diag <= 1 + epsilon:
         return [k]
     else:
-        return [l, m]
+        return [m, l]
 
 
-def decompose_recursive(idx, A: np.ndarray, P, L: np.ndarray, D: np.ndarray, A_orig):
+def permute_lines(matrix_l, permutations):
+    for (idx_1, idx_2) in permutations:
+        # Swap line idx_1 with line idx_2
+        matrix_l[[idx_1, idx_2], :] = matrix_l[[idx_2, idx_1], :]
+
+
+def permute_symmetric(matrix_a, permutations):
+    for (idx_1, idx_2) in permutations:
+        # Swap line idx_1 with line idx_2
+        matrix_a[[idx_1, idx_2], :] = matrix_a[[idx_2, idx_1], :]
+        # Swap column idx_1 with column idx_2
+        matrix_a[:, [idx_1, idx_2]] = matrix_a[:, [idx_2, idx_1]]
+
+
+def decompose_recursive(idx, matrix_a: np.ndarray, permutations, matrix_l: np.ndarray, matrix_d: np.ndarray):
     """
-    Helper method for decompose(A), performs the idx-th recursion step.
+    Helper method for decompose(matrix_a), performs the idx-th recursion step.
 
     :param idx: recursion index
-    :param A: matrix to be decomposed
-    :param P: permutation list
-    :param L: lower triangular matrix
-    :param D: block diagonal matrix
+    :param matrix_a: matrix A to be decomposed
+    :param permutations: permutation list,
+        has the form (i, (j, k)), where i is the starting index of the block matrix that should be permuted,
+        and j, k the indices in the block matrix to permute
+    :param matrix_l: lower triangular matrix
+    :param matrix_d: block diagonal matrix
     :return: diagonal indices of the current recursion step, None if A is singular
     """
 
     # A is (n x n)-matrix
-    n = A[0,].size
+    n = matrix_a[0, ].size
 
     # First, check if A is singular, if not so determine the indices and size of the diagonal block.
-    diag_indices = get_diagonal_index_list(A)
-
+    diag_indices = get_diagonal_indices(matrix_a)
     if diag_indices is None:
         # Matrix is singular, so it cannot be decomposed.
-        return None
+        return False
     else:
         # Size of the diagonal block.
         diag_size = len(diag_indices)
@@ -70,97 +85,99 @@ def decompose_recursive(idx, A: np.ndarray, P, L: np.ndarray, D: np.ndarray, A_o
     # ----- Recursion termination ----- #
 
     if n == 1:
-        # Deomposition complete.
-        D[idx, idx] = A[0, 0]
-        return [0]
+        # Decomposition complete.
+        matrix_d[idx, idx] = matrix_a[0, 0]
+        return True
 
     elif n == 2:
         # Decomposition complete.
         if diag_size == 1:
             # Just some simple calculations...
             diag_idx = diag_indices[0]
-            d = A[diag_idx, diag_idx]
-            c = A[0, 1]
-            h = A[1 - diag_idx, 1 - diag_idx]
-            D[idx:idx + 2, idx:idx + 2] = np.array([[d, 0],
-                                                    [0, h - c * c / d]])
-            L[idx + 1, idx] = c / d
+            d = matrix_a[diag_idx, diag_idx]
+            c = matrix_a[0, 1]
+            h = matrix_a[1 - diag_idx, 1 - diag_idx]
+            matrix_d[idx, idx] = d
 
-            # Write permutation to P, then return index for previous recursion step.
-            permutation_idx = idx + diag_idx
-            P.append((idx, permutation_idx))
+            # Perform last recursion step and check if the matrix is singluar.
+            next_diag_idx = decompose_recursive(idx + 1, np.array([[h - c * c / d]]), permutations, matrix_l, matrix_d)
+            if next_diag_idx is None:
+                return False
 
-            return [diag_idx]
+            matrix_l[idx + 1, idx] = c / d
+
+            # Write permutation to permutations list
+            if diag_idx == 1:
+                permute_lines(matrix_l[idx:, 0:idx], [(0, 1)])
+                permutations.append((idx, idx + 1))
+
+            return True
         else:  # diag_size == 2
-            D[idx:idx + 2, idx:idx + 2] = A[0:2, 0:2]
-            return [0]
+            matrix_d[idx:idx + 2, idx:idx + 2] = matrix_a[0:2, 0:2]
+            return True
 
     # -------- Recursion step --------- #
 
     else:
         # Permute A symmetric and in-place to get the desired block matrix with D_idx as upper left block
-        # and add the permutation indices to the list P
-        for i, swap_idx in enumerate(diag_indices):
-            # Swap line i with line diag_idx
-            A[[i, swap_idx], :] = A[[swap_idx, i], :]
-            # Swap column i with column diag_idx
-            A[:, [i, swap_idx]] = A[:, [swap_idx, i]]
+        # and add the permutations to the list.
+        current_permutations = []
+        for i in range(diag_size):  # either 1 or 2
+            current_permutations.append((i, diag_indices[i]))
 
-        # Write permutation to P.
-        permutation_idx = idx + diag_idx
-        P.append((idx, permutation_idx))
+        permute_symmetric(matrix_a, current_permutations)
+        permute_lines(matrix_l[idx:, 0:idx], current_permutations)
 
-        # Write the diagonal block into the block diagonal matrix.
-        D[idx:idx + diag_size, idx:idx + diag_size] = A[0:diag_size, 0:diag_size]
+        for (i, j) in current_permutations:
+            permutations.append((i + idx, j + idx))
 
         # Calculate the inverse of the diagonal block for further calculations.
         if diag_size == 1:
-            D_inv = np.array([[1 / A[0, 0]]])
+            d_inv = np.array([[1 / matrix_a[0, 0]]])
+
         else:  # diag_size == 2
-            a, b, d = A[0, 0], A[0, 1], A[1, 1]
-            D_inv = np.array([[a, -b], [-b, d]]) / (a * d - b * b)
+            # Calculate the inverse.
+            a, b, d = matrix_a[0, 0], matrix_a[0, 1], matrix_a[1, 1]
+            d_inv = np.array([[a, -b], [-b, d]]) / (a * d - b * b)
+
+        # Write the diagonal block into the block diagonal matrix.
+        matrix_d[idx:idx + diag_size, idx:idx + diag_size] = matrix_a[0:diag_size, 0:diag_size]
 
         # Select C for calulation of the next A and L column
-        C = A[diag_size:, 0:diag_size]
+        matrix_c = matrix_a[diag_size:, 0:diag_size]
 
-        # Set A for next recursion step and calculate next recursion step
-        A = A[diag_size:, diag_size:] - np.dot(np.dot(C, D_inv), C.T)
-        next_diag_indices = decompose_recursive(idx + diag_size, A, P, L, D, A_orig)
+        matrix_l[idx + diag_size:, idx:idx + diag_size] = np.dot(matrix_c, d_inv)
 
-        # Calculate the L column(s) and permute rows accordingly
-        L_col = np.dot(C, D_inv)
-        for i, diag_idx in enumerate(next_diag_indices):
-            L_col[[i, diag_idx], :] = L_col[[diag_idx, i], :]
+        matrix_a_new = matrix_a[diag_size:, diag_size:] - np.dot(np.dot(matrix_c, d_inv), matrix_c.T)
 
-        # Set L column(s)
-        L[idx + diag_size:, idx:idx + diag_size] = L_col
-
-        return diag_indices
+        return decompose_recursive(idx + diag_size,
+                                   matrix_a_new,
+                                   permutations, matrix_l, matrix_d)
 
 
-def decompose(A: np.ndarray):
+def decompose(matrix_a: np.ndarray):
     """
     If A is not singular, decompose the given matrix
     with the generalized Cholesky decomposition
     such that P^T A P = L D L^T.
 
-    :param A: matrix A
-    :return: matrices P, L, D, None if A is singular
+    :param matrix_a: matrix A
+    :return: matrices L, D and permutation list P None if A is singular
     """
 
     # A is a (n x n)-matrix
-    n = A[0, ].size
+    n = matrix_a[0, ].size
 
     # Copy A because it will be changed in-place
-    A_copy = np.copy(A)
+    matrix_a_copy = np.copy(matrix_a)
     # Permutation list
-    P = []
+    permutations = []
     # Lower triangular matrix
-    L = np.identity(n)
+    matrix_l = np.identity(n)
     # Diagonal matrix
-    D = np.identity(n)
+    matrix_d = np.identity(n)
 
-    if decompose_recursive(0, A_copy, P, L, D, A_copy):
-        return P, L, D
+    if decompose_recursive(0, matrix_a_copy, permutations, matrix_l, matrix_d):
+        return permutations, matrix_l, matrix_d
     else:
         return None
