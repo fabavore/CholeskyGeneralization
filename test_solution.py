@@ -68,12 +68,21 @@ def test_diagonal_substitution():
     return (sol.diagonal_substitution(matrix_d, b) == x).all()
 
 
+def test_solve():
+    matrix_l = random_lower_int_matrix(10, 50)
+    matrix_d = random_block_diagonal_int_matrix(10, 50)
+    x = random_vector(10, 50)
+    b = np.dot(np.dot(np.dot(matrix_l, matrix_d), matrix_l.T), x)
+    return (sol.solve(matrix_l, matrix_d, b) == x).all()
+
+
 def test():
     success = True
     for _ in range(1000):
         success = success and test_forward_substitution() and \
                   test_backward_substitution() and \
-                  test_diagonal_substitution()
+                  test_diagonal_substitution() and \
+                  test_solve()
     print(success)
 
 

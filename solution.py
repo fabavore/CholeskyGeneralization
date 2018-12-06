@@ -49,7 +49,7 @@ def backward_substitution(matrix_u, b):
     return x
 
 
-def solve(matrix_l: np.ndarray, matrix_d: np.ndarray, vector_b: np.ndarray):
+def solve(matrix_l: np.ndarray, matrix_d: np.ndarray, b: np.ndarray):
     """
     Solves the equation L D L^T x = b
     for L lower triangle matrix and D diagonal block matrix with block size 1 or 2.
@@ -63,40 +63,15 @@ def solve(matrix_l: np.ndarray, matrix_d: np.ndarray, vector_b: np.ndarray):
     n = matrix_l[0, ].size
     assert n == matrix_l[:, 0].size and \
         matrix_d[0, ].size == matrix_d[:, 0].size and \
-        n == matrix_d[0, ].size and n == vector_b.size
+        n == matrix_d[0, ].size and n == b.size
 
-    vector_z = np.zeros((n, 1))
-    vector_y = np.zeros((n, 1))
-    vector_x = np.zeros((n, 1))
+    # Now calculate z from L z = b via forward substitution
+    z = forward_substitution(matrix_l, b)
 
-    # Now calculate z via L z = b
+    # Calculate y from D y = z via diagonal substitution
+    y = diagonal_substitution(matrix_d, z)
 
-    # Calculate y via D y = z
+    # Calculate x from L^T x = y via backward substitution
+    x = backward_substitution(matrix_l.T, y)
 
-    i = 0
-    while i < n - 1:
-        if matrix_d[i + 1, i] == 0:
-            vector_y[i] = vector_z[i] / matrix_d[i, i]
-            i += 1
-        else:  # (2 x 2) diagonal block
-            a, b, d = matrix_d[i, i], matrix_d[i + 1, i], matrix_d[i + 1, i + 1]
-            if a == 0 and d == 0:
-                vector_y[i] = vector_z[i] / b
-                vector_y[i + 1] = vector_z[i + 1] / b
-            elif a == 0:
-                vector_y[i] = vector_z[i] / b
-                vector_y[i + 1] = (vector_z[i + 1] - vector_z[i]) / d
-            elif d == 0:
-                vector_y[i + 1] = vector_z[i + 1] / b
-                vector_y[i] = (vector_z[i] - vector_z[i + 1]) / a
-            else:
-                y = (vector_z[i] - vector_z[i + 1]) / (a * d - b * b)
-                vector_y[i] = y
-                vector_y[i + 1] = (vector_z[i] - a * y) / b
-            i += 2
-    if matrix_d[n - 1, n - 2] == 0:
-        vector_y[n - 1] = vector_z[n - 1] / matrix_d[n - 1, n - 1]
-
-    # Calculate x via L^T x = y
-
-    return vector_x
+    return x
