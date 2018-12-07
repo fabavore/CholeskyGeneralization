@@ -118,12 +118,8 @@ def decompose_recursive(idx, matrix_a: np.ndarray, permutations, matrix_l: np.nd
                 permutations.append((idx, idx + 1))
 
             # Perform last recursion step and check if the matrix is singular.
-            next_diag_idx = decompose_recursive(idx + 1, np.array([[h - c * c / d]]), permutations, matrix_l,
+            return decompose_recursive(idx + 1, np.array([[h - c * c / d]]), permutations, matrix_l,
                                                 matrix_d)
-            if next_diag_idx is None:
-                return False
-
-            return True
         else:  # diag_size == 2
             matrix_d[idx:idx + 2, idx:idx + 2] = matrix_a[0:2, 0:2]
             return True
@@ -191,5 +187,3 @@ def decompose(matrix_a: np.ndarray):
 
     if decompose_recursive(0, matrix_a_copy, permutations, matrix_l, matrix_d):
         return permutations, matrix_l, matrix_d
-    else:
-        return None

@@ -37,10 +37,16 @@ def block_diagonal(n, max_val, ratio, eps, epsilon, int_val=False):
             matrix_d[i, i] = single_entry(max_val, eps, int_val)
         else:  # block_size == 2
             c = single_entry(max_val, 3 * eps, int_val)
-            current_max_val = c / (1 + epsilon)
+            current_max_val = abs(c / (1 + epsilon))
             a, d = single_entry(current_max_val, eps, int_val), single_entry(current_max_val, eps, int_val)
             matrix_d[i:i + 2, i:i + 2] = np.array([[a, c], [c, d]])
         i += block_size
     if i < n:
         matrix_d[i, i] = single_entry(max_val, eps, int_val)
     return matrix_d
+
+
+def vector(n, max_val, int_val=False):
+    shape = (n, 1)
+    return np.random.random_integers(-max_val, max_val, shape) if int_val \
+        else 2 * (np.random.random_sample(shape) - 0.5 * np.ones(shape)) * max_val

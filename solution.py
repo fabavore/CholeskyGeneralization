@@ -73,7 +73,7 @@ def solve(matrix_l: np.ndarray, matrix_d: np.ndarray, b: np.ndarray):
     for matrix_l lower triangle matrix and matrix_d diagonal block matrix with block size 1 or 2.
     :param matrix_l: lower triangular matrix
     :param matrix_d: block diagonal matrix
-    :param vector_b: right side vector
+    :param b: right side vector
     :return: solution vector x
     """
 
