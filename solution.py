@@ -2,6 +2,12 @@ import numpy as np
 
 
 def forward_substitution(matrix_l, b):
+    """
+    Solve matrix_l * x = b via forward subsitution
+    :param matrix_l: lower triangular matrix
+    :param b: right side vector
+    :return: solution vector x
+    """
     n = matrix_l[0,].size
     x = np.zeros((n, 1))
     for i in range(n):
@@ -10,6 +16,12 @@ def forward_substitution(matrix_l, b):
 
 
 def diagonal_substitution(matrix_d, b):
+    """
+    Solve matrix_d * x = b via 'diagonal substitution', see below
+    :param matrix_d: block diagonal matrix with (1x1) and (2x2) blocks
+    :param b: right side vector
+    :return: solution vector x
+    """
     n = matrix_d[0,].size
     x = np.zeros((n, 1))
     i = 0
@@ -42,6 +54,12 @@ def diagonal_substitution(matrix_d, b):
 
 
 def backward_substitution(matrix_u, b):
+    """
+    Solves matrix_u * x = b via backward substitution
+    :param matrix_u: upper diagonal matrix
+    :param b: right side vector
+    :return: solution vector x
+    """
     n = matrix_u[0,].size
     x = np.zeros((n, 1))
     for i in range(n - 1, -1, -1):
@@ -51,15 +69,16 @@ def backward_substitution(matrix_u, b):
 
 def solve(matrix_l: np.ndarray, matrix_d: np.ndarray, b: np.ndarray):
     """
-    Solves the equation L D L^T x = b
-    for L lower triangle matrix and D diagonal block matrix with block size 1 or 2.
-    :param matrix_l: L
-    :param matrix_d: D
-    :param vector_b: b
-    :return: x
+    Solves the equation L D L^T x = b (L = matrix_l, D = matrix_d)
+    for matrix_l lower triangle matrix and matrix_d diagonal block matrix with block size 1 or 2.
+    :param matrix_l: lower triangular matrix
+    :param matrix_d: block diagonal matrix
+    :param vector_b: right side vector
+    :return: solution vector x
     """
 
-    # L, D are (n x n)-matrices and b is a (n x 1)-vector
+    # matrix_l, matrix_d are (n x n)-matrices and b is a (n x 1)-vector.
+    # Assert that all matrix and vector sizes match.
     n = matrix_l[0, ].size
     assert n == matrix_l[:, 0].size and \
         matrix_d[0, ].size == matrix_d[:, 0].size and \

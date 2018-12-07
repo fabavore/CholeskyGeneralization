@@ -25,58 +25,37 @@ def test_decompose(matrix_a):
         permutations, matrix_l, matrix_d = dc.decompose(matrix_a)
     except TypeError:
         print("Singular matrix:\n", matrix_a)
-        return False
-
-    matrix_a_copy = np.copy(matrix_a)
+        return -1
 
     dc.permute_symmetric(matrix_a, permutations)
 
     probe = np.dot(np.dot(matrix_l, matrix_d), matrix_l.T)
 
     if np.array_equal(matrix_a, probe):
-        print("Success.\n")
-    elif np.allclose(matrix_a, probe, ):
-        print("Close enough.\n")
-        if not (probe == probe.T).all():
-            0#print("A:\n", matrix_a,
-             #   "\nProbe A:\n", probe)
-                # "\nGleich?:\n", A == probe, "\n")
+        return 0
+    elif np.allclose(matrix_a, probe):
+        return 1
     else:
-        print("\n --- W R O N G !!! ---\n")
-        print("P:\n", permutations, "\nL:\n", matrix_l, "\nD:\n", matrix_d, "\n")
-        print("A:\n", matrix_a_copy,
-              "\nA permuted:\n", matrix_a,
-              "\nProbe A:\n", probe,
-              "\nGleich?:\n", matrix_a == probe, "\n")
-    return True
+        return 2
 
 
-def random_test_decompose(n):
-    assert(test_decompose(random_symmetric_int_matrix(n, 5)))
-
-
-A_1 = np.array([[2, -1, -2, 4],
-                [-1, 1, 1, -1],
-                [-2, 1, 1, -1],
-                [4, -1, -1, 2]])
-A_2 = np.array([[1, 2, 1, 0],
-                [2, 2, 2, 1],
-                [1, 2, 0, 0],
-                [0, 1, 0, 2]])
-A_3 = np.array([[1, 2, 0, -1],
-                [2, -2, -1, 1],
-                [0, -1, 1, -2],
-                [-1, 1, -2, 2]])
-A_4 = np.array([[2, -1, -2, 1],
-                [-1, 1, 4, -1],
-                [-2, 4, 1, -1],
-                [1, -1, -1, 2]])
-A_5 = np.array([[4, 0, 5, 1],
-                [0, 1, 0, 5],
-                [5, 0, 5, 3],
-                [1, 5, 3, 2]])
+def test():
+    c_1, c_2, c_3, c_4 = 0, 0, 0, 0
+    for _ in range(1000):
+        t = test_decompose(random_symmetric_int_matrix(10, 50))
+        if t == 0:
+            c_1 += 1
+        elif t == 1:
+            c_2 += 1
+        elif t == 2:
+            c_3 += 1
+        else:
+            c_4 += 1
+    print("Success: ", c_1,
+          ", Close enough: ", c_2,
+          ", Not even close: ", c_3,
+          ", Singular matrix: ", c_4)
 
 
 if __name__ == '__main__':
-    for _ in range(20):
-        random_test_decompose(4)
+    test()
