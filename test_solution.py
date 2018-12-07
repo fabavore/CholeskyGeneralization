@@ -2,23 +2,6 @@ import numpy as np
 import solution as sol
 
 
-def random_lower_int_matrix(n, max_val):
-    """
-    Generate random lower triangular matrix of size n.
-    """
-    a = np.random.random_integers(-max_val, max_val, size=(n, n))
-    return np.identity(n) + np.tril(a, -1)
-
-
-def random_upper_int_matrix(n, max_val):
-    return random_lower_int_matrix(n, max_val).T
-
-
-def random_diagonal_int_matrix(n, max_val):
-    a = np.random.random_integers(1, max_val, size=n)
-    return np.diag(a)
-
-
 def random_block_diagonal_int_matrix(n, max_val):
     i = 0
     matrix_d = np.identity(n)

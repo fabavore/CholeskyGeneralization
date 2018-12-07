@@ -2,24 +2,6 @@ import numpy as np
 import decomposition as dc
 
 
-def random_symmetric_int_matrix(n, max_val):
-    """
-    Generate random symmetric matrix of size n.
-    """
-    A = np.random.random_integers(-max_val, max_val, size=(n, n))
-    A = np.tril(A) + np.tril(A, -1).T
-    return A
-
-
-def random_symmetric_positive_int_matrix(n, max_val):
-    """
-        Generate random symmetric matrix of size n with positive entries.
-        """
-    A = np.random.random_integers(0, max_val, size=(n, n))
-    A = np.tril(A) + np.tril(A, -1).T
-    return A
-
-
 def test_decompose(matrix_a):
     try:
         permutations, matrix_l, matrix_d = dc.decompose(matrix_a)
@@ -37,6 +19,9 @@ def test_decompose(matrix_a):
         return 1
     else:
         return 2
+
+
+
 
 
 def test():
