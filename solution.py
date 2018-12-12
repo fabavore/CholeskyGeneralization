@@ -1,13 +1,16 @@
 import numpy as np
+import decomposition as dc
 
 
 def forward_substitution(matrix_l, b):
     """
-    Solve matrix_l * x = b via forward subsitution
+    Solve matrix_l * x = b via forward subsitution.
+
     :param matrix_l: lower triangular matrix
     :param b: right side vector
     :return: solution vector x
     """
+
     n = matrix_l[0,].size
     x = np.zeros((n, 1))
     for i in range(n):
@@ -17,11 +20,13 @@ def forward_substitution(matrix_l, b):
 
 def diagonal_substitution(matrix_d, b):
     """
-    Solve matrix_d * x = b via 'diagonal substitution', see below
+    Solve matrix_d * x = b via 'diagonal substitution', see below.
+
     :param matrix_d: block diagonal matrix with (1x1) and (2x2) blocks
     :param b: right side vector
     :return: solution vector x
     """
+
     n = matrix_d[0,].size
     x = np.zeros((n, 1))
     i = 0
@@ -55,11 +60,13 @@ def diagonal_substitution(matrix_d, b):
 
 def backward_substitution(matrix_u, b):
     """
-    Solves matrix_u * x = b via backward substitution
+    Solves matrix_u * x = b via backward substitution.
+
     :param matrix_u: upper diagonal matrix
     :param b: right side vector
     :return: solution vector x
     """
+
     n = matrix_u[0,].size
     x = np.zeros((n, 1))
     for i in range(n - 1, -1, -1):
@@ -67,10 +74,12 @@ def backward_substitution(matrix_u, b):
     return x
 
 
-def solve(matrix_l: np.ndarray, matrix_d: np.ndarray, b: np.ndarray):
+def solve(permutations: list, matrix_l: np.ndarray, matrix_d: np.ndarray, b: np.ndarray):
     """
-    Solves the equation L D L^T x = b (L = matrix_l, D = matrix_d)
+    Solves the equation L D L^T Pi^T x = Pi^T b (L = matrix_l, D = matrix_d, Pi = permutation matrix)
     for matrix_l lower triangle matrix and matrix_d diagonal block matrix with block size 1 or 2.
+
+    :param permutations: permutation list
     :param matrix_l: lower triangular matrix
     :param matrix_d: block diagonal matrix
     :param b: right side vector
@@ -84,13 +93,16 @@ def solve(matrix_l: np.ndarray, matrix_d: np.ndarray, b: np.ndarray):
         matrix_d[0, ].size == matrix_d[:, 0].size and \
         n == matrix_d[0, ].size and n == b.size
 
-    # Now calculate z from L z = b via forward substitution
+    # Now calculate z from L z = Pi^T b via forward substitution
+    dc.permute_rows(b, permutations)
     z = forward_substitution(matrix_l, b)
 
     # Calculate y from D y = z via diagonal substitution
     y = diagonal_substitution(matrix_d, z)
 
-    # Calculate x from L^T x = y via backward substitution
+    # Calculate x from L^T Pi^T x = y via backward substitution
     x = backward_substitution(matrix_l.T, y)
+    permutations.reverse()
+    dc.permute_rows(x, permutations)
 
     return x

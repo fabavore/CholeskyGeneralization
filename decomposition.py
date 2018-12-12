@@ -43,11 +43,13 @@ def get_diagonal_indices(matrix_a: np.ndarray):
 
 def permute_rows(matrix_a, permutations):
     """
-    Apply a number of permutations to the rows (entries) of a matrix (vector)
+    Apply a number of permutations to the rows (entries) of a matrix (vector).
+
     :param matrix_a: matrix to permute
     :param permutations: permutations list
     :return:
     """
+
     for (idx_1, idx_2) in permutations:
         # Swap line idx_1 with line idx_2
         matrix_a[[idx_1, idx_2], :] = matrix_a[[idx_2, idx_1], :]
@@ -55,11 +57,13 @@ def permute_rows(matrix_a, permutations):
 
 def permute_symmetric(matrix_a, permutations):
     """
-    Apply a number of permutations symmetrically to the rows and columns of a mtarix
+    Apply a number of permutations symmetrically to the rows and columns of a matrix.
+
     :param matrix_a: matrix to permute
     :param permutations: permutations list
     :return:
     """
+
     for (idx_1, idx_2) in permutations:
         # Swap line idx_1 with line idx_2
         matrix_a[[idx_1, idx_2], :] = matrix_a[[idx_2, idx_1], :]
@@ -67,11 +71,12 @@ def permute_symmetric(matrix_a, permutations):
         matrix_a[:, [idx_1, idx_2]] = matrix_a[:, [idx_2, idx_1]]
 
 
-def decompose_recursive(idx, matrix_a: np.ndarray, permutations, matrix_l: np.ndarray, matrix_d: np.ndarray):
+def decompose_recursive(idx, matrix_a: np.ndarray, permutations: list, matrix_l: np.ndarray, matrix_d: np.ndarray):
     """
     Perform the idx-th recursion step of the decomposition for remaining matrix_a,
     i.e. calculate the idx-th diagonal block of diagonal matrix matrix_d,
     the idx-th column of the lower triangular matrix matrix_l and the idx-th permutation.
+
     :param idx: recursion index
     :param matrix_a: remaining matrix to be decomposed
     :param permutations: permutations list to append current permutation to
@@ -168,6 +173,7 @@ def decompose(matrix_a: np.ndarray):
     """
     If matrix_a is not singular, decompose matrix_a with the generalized Cholesky decomposition
     such that P^T A P = L D L^T (P from permutation list, A = matrix_a, L = matrix_l, D = matrix_d).
+
     :param matrix_a: matrix to be decomposed
     :return: matrices matrix_l, matrix_d and permutation list, None if matrix_a is singular
     """

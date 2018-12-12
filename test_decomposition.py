@@ -2,7 +2,7 @@ import numpy as np
 import random_matrices
 import decomposition as dc
 
-eps = 1e-12
+eps = 1e-14
 
 
 def test_decompose(matrix_a):
@@ -23,8 +23,8 @@ def test_decompose(matrix_a):
     return True
 
 
-def test(batch_size=10000, n=10, max_val=100, int_val=False):
+def test_batch(batch_size=10000, n=10, max_val=1, int_val=False):
     count = 0
     for _ in range(batch_size):
         count += test_decompose(random_matrices.symmetric(n, max_val, int_val))
-    print("Successfully tested decomposition.", "\nDecomposed: ", count, "\nSingular matrices: ", batch_size - count)
+    print("Successfully tested decomposition.", "\nDecomposed:", count, "\nSingular matrices:", batch_size - count)
