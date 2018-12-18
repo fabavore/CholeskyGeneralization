@@ -149,9 +149,10 @@ def decompose(matrix_a: np.ndarray):
     :return: matrices matrix_l, matrix_d and permutation list, None if matrix_a is singular
     """
 
-    # matrix_a is a (n x n)-matrix, make sure that matrix_a is quadratic
+    # make sure that matrix_a is symmetric
+    assert (matrix_a == matrix_a.T).all()
+    # matrix_a is a (n x n)-matrix
     n = matrix_a[0, ].size
-    assert n == matrix_a[:, 0].size
 
     # Copy matrix_a because it will be changed in-place
     matrix_a_copy = np.copy(matrix_a)
