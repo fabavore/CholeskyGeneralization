@@ -1,5 +1,5 @@
 import numpy as np
-import decomposition as dc
+import matrix
 
 
 def forward_substitution(matrix_l, b):
@@ -11,7 +11,7 @@ def forward_substitution(matrix_l, b):
     :return: solution vector x
     """
 
-    n = matrix_l[0,].size
+    n = matrix_l[0, ].size
     x = np.zeros((n, 1))
     for i in range(n):
         x[i] = b[i] - np.dot(matrix_l[i], x)
@@ -27,7 +27,7 @@ def diagonal_substitution(matrix_d, b):
     :return: solution vector x
     """
 
-    n = matrix_d[0,].size
+    n = matrix_d[0, ].size
     x = np.zeros((n, 1))
     i = 0
     while i < n - 1:
@@ -67,7 +67,7 @@ def backward_substitution(matrix_u, b):
     :return: solution vector x
     """
 
-    n = matrix_u[0,].size
+    n = matrix_u[0, ].size
     x = np.zeros((n, 1))
     for i in range(n - 1, -1, -1):
         x[i] = b[i] - np.dot(matrix_u[i], x)
@@ -94,7 +94,7 @@ def solve(permutations: list, matrix_l: np.ndarray, matrix_d: np.ndarray, b: np.
         n == matrix_d[0, ].size and n == b.size
 
     # Now calculate z from L z = Pi^T b via forward substitution
-    dc.permute_rows(b, permutations)
+    matrix.permute_rows(b, permutations)
     z = forward_substitution(matrix_l, b)
 
     # Calculate y from D y = z via diagonal substitution
@@ -103,6 +103,6 @@ def solve(permutations: list, matrix_l: np.ndarray, matrix_d: np.ndarray, b: np.
     # Calculate x from L^T Pi^T x = y via backward substitution
     x = backward_substitution(matrix_l.T, y)
     permutations.reverse()
-    dc.permute_rows(x, permutations)
+    matrix.permute_rows(x, permutations)
 
     return x

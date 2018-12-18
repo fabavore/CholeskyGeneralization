@@ -8,12 +8,7 @@ eps = 1e-08
 def test_solve(matrix_l, matrix_d, x):
     b = np.dot(np.dot(np.dot(matrix_l, matrix_d), matrix_l.T), x)
     x_test = sol.solve([], matrix_l, matrix_d, b)
-    if not np.linalg.norm(x_test - x) < eps:
-        print(np.linalg.norm(x_test - x))
-        print(np.allclose(x_test, x))
-        #print("Not close enough:\n", np.linalg.norm(x_test - x), "\n", x, "\n", x_test, "\n")
-        return False
-    return True
+    return np.linalg.norm(x_test - x) < eps
 
 
 def test_batch(batch_size=10000, n=10, max_val=1, int_val=False):

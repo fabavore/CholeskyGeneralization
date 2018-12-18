@@ -1,4 +1,6 @@
 import numpy as np
+import matrix
+
 
 eps = np.finfo(float).eps
 epsilon = 0.5
@@ -39,36 +41,6 @@ def get_diagonal_indices(matrix_a: np.ndarray):
         return [k]
     else:
         return [m, l]
-
-
-def permute_rows(matrix_a, permutations):
-    """
-    Apply a number of permutations to the rows (entries) of a matrix (vector).
-
-    :param matrix_a: matrix to permute
-    :param permutations: permutations list
-    :return:
-    """
-
-    for (idx_1, idx_2) in permutations:
-        # Swap line idx_1 with line idx_2
-        matrix_a[[idx_1, idx_2], :] = matrix_a[[idx_2, idx_1], :]
-
-
-def permute_symmetric(matrix_a, permutations):
-    """
-    Apply a number of permutations symmetrically to the rows and columns of a matrix.
-
-    :param matrix_a: matrix to permute
-    :param permutations: permutations list
-    :return:
-    """
-
-    for (idx_1, idx_2) in permutations:
-        # Swap line idx_1 with line idx_2
-        matrix_a[[idx_1, idx_2], :] = matrix_a[[idx_2, idx_1], :]
-        # Swap column idx_1 with column idx_2
-        matrix_a[:, [idx_1, idx_2]] = matrix_a[:, [idx_2, idx_1]]
 
 
 def decompose_recursive(idx, matrix_a: np.ndarray, permutations: list, matrix_l: np.ndarray, matrix_d: np.ndarray):
@@ -119,12 +91,11 @@ def decompose_recursive(idx, matrix_a: np.ndarray, permutations: list, matrix_l:
 
             # Write permutation to permutations list if necessary
             if diag_idx == 1:
-                permute_rows(matrix_l[idx:, 0:idx], [(0, 1)])
+                matrix.permute_rows(matrix_l[idx:, 0:idx], [(0, 1)])
                 permutations.append((idx, idx + 1))
 
             # Perform last recursion step and check if the matrix is singular.
-            return decompose_recursive(idx + 1, np.array([[h - c * c / d]]), permutations, matrix_l,
-                                                matrix_d)
+            return decompose_recursive(idx + 1, np.array([[h - c * c / d]]), permutations, matrix_l, matrix_d)
         else:  # diag_size == 2
             matrix_d[idx:idx + 2, idx:idx + 2] = matrix_a[0:2, 0:2]
             return True
@@ -138,8 +109,8 @@ def decompose_recursive(idx, matrix_a: np.ndarray, permutations: list, matrix_l:
         for i in range(diag_size):  # either 1 or 2
             current_permutations.append((i, diag_indices[i]))
 
-        permute_symmetric(matrix_a, current_permutations)
-        permute_rows(matrix_l[idx:, 0:idx], current_permutations)
+        matrix.permute_symmetric(matrix_a, current_permutations)
+        matrix.permute_rows(matrix_l[idx:, 0:idx], current_permutations)
 
         for (i, j) in current_permutations:
             permutations.append((i + idx, j + idx))
