@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7668b48c-ae8d-4f09-a552-806e2a3dfed3" name="Default" comment="Supposedly finished">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/decomposition.py" beforeDir="false" afterPath="$PROJECT_DIR$/decomposition.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/matrix.py" beforeDir="false" afterPath="$PROJECT_DIR$/matrix.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/error_log" beforeDir="false" afterPath="$PROJECT_DIR$/error_log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -53,7 +51,7 @@
         <counts>
           <entry key="Python Console" value="218" />
           <entry key="main" value="218" />
-          <entry key="py" value="18373" />
+          <entry key="py" value="18418" />
           <entry key="test" value="84" />
           <entry key="test_decomposition" value="277" />
           <entry key="test_solution" value="299" />
@@ -63,12 +61,13 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="420" />
-          <entry key="Python" value="19469" />
+          <entry key="Python" value="19514" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="cfg" value="1" />
+          <entry key="error_log" value="1" />
           <entry key="errors" value="1" />
           <entry key="ipynb" value="2" />
           <entry key="json" value="1" />
@@ -82,7 +81,7 @@
           <entry key="IPNB" value="2" />
           <entry key="Ini" value="1" />
           <entry key="JSON" value="1" />
-          <entry key="PLAIN_TEXT" value="5" />
+          <entry key="PLAIN_TEXT" value="6" />
           <entry key="Python" value="16" />
         </counts>
       </usages-collector>
@@ -159,14 +158,23 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-353">
-              <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+            <state relative-caret-position="200">
+              <caret line="68" column="32" selection-start-line="68" selection-start-column="32" selection-end-line="68" selection-end-column="32" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
-                <marker date="1545165231431" expanded="false" signature="1665:1670" ph="..." />
-                <marker date="1545165231431" expanded="true" signature="1665:1936" ph="..." />
-                <marker date="1545165231431" expanded="true" signature="2358:2440" ph="..." />
+                <marker date="1545165957721" expanded="false" signature="1693:1698" ph="..." />
+                <marker date="1545165957721" expanded="true" signature="1693:1964" ph="..." />
+                <marker date="1545165957721" expanded="true" signature="2386:2468" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/error_log">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret lean-forward="true" />
             </state>
           </provider>
         </entry>
@@ -216,6 +224,7 @@
         <option value="$PROJECT_DIR$/decomposition.py" />
         <option value="$PROJECT_DIR$/text" />
         <option value="$PROJECT_DIR$/errors" />
+        <option value="$PROJECT_DIR$/error_log" />
         <option value="$PROJECT_DIR$/test.py" />
       </list>
     </option>
@@ -532,7 +541,7 @@
     <frame x="0" y="23" width="1440" height="877" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12732475" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12732475" />
       <window_info id="Structure" order="1" weight="0.24964234" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -547,7 +556,7 @@
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.328084" />
       <window_info anchor="bottom" id="Messages" order="11" />
-      <window_info anchor="bottom" id="Python Console" order="12" weight="0.39632547" />
+      <window_info anchor="bottom" id="Python Console" order="12" visible="true" weight="0.39632547" />
       <window_info anchor="bottom" id="Database Changes" order="13" show_stripe_button="false" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -818,18 +827,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_solution.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="43" selection-start-line="10" selection-start-column="43" selection-end-line="10" selection-end-column="43" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1545144890709" expanded="true" signature="77:296" ph="..." />
-            <marker date="1545144890709" expanded="true" signature="118:281" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/random_matrices.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
@@ -845,17 +842,33 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/error_log">
-      <provider selected="true" editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret lean-forward="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_solution.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="43" selection-start-line="10" selection-start-column="43" selection-end-line="10" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <marker date="1545144890709" expanded="true" signature="77:296" ph="..." />
+            <marker date="1545144890709" expanded="true" signature="118:281" ph="..." />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-353">
-          <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+        <state relative-caret-position="200">
+          <caret line="68" column="32" selection-start-line="68" selection-start-column="32" selection-end-line="68" selection-end-column="32" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
-            <marker date="1545165231431" expanded="false" signature="1665:1670" ph="..." />
-            <marker date="1545165231431" expanded="true" signature="1665:1936" ph="..." />
-            <marker date="1545165231431" expanded="true" signature="2358:2440" ph="..." />
+            <marker date="1545165957721" expanded="false" signature="1693:1698" ph="..." />
+            <marker date="1545165957721" expanded="true" signature="1693:1964" ph="..." />
+            <marker date="1545165957721" expanded="true" signature="2386:2468" ph="..." />
           </folding>
         </state>
       </provider>

@@ -1,7 +1,7 @@
 from typing import Any, Union
 
 import numpy as np
-import sys
+from contextlib import redirect_stdout
 
 import matrix
 import decomposition
@@ -65,12 +65,12 @@ def random_test_batch(size, n, max_val, int_val):
         size, n, max_val, "integer" if int_val else "float", "]" if int_val else ")"
     ))
     cnt = 0
-    with open("error_log", "a") as sys.stdout:
-        for _ in range(size):
-            cnt += random_test_run(n, max_val, int_val)
-    sys.stdout = sys.__stdout__
+    with open("error_log", "a") as f:
+        with redirect_stdout(f):
+            for _ in range(size):
+                cnt += random_test_run(n, max_val, int_val)
     print("Test complete and successful for {0} random matrices.".format(cnt))
 
 
 if __name__ == '__main__':
-    random_test_batch(10000, 4, 4, True)
+    random_test_batch(1000, 4, 4, True)
